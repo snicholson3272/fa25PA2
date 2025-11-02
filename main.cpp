@@ -50,6 +50,7 @@ int main() {
 
 // Step 1: Read file and count frequencies
 void buildFrequencyTable(int freq[], const string& filename) {
+    cout << "Trying to open file at: " << filename << endl;
     ifstream file(filename);
     if (!file.is_open()) {
         cerr << "Error: could not open " << filename << "\n";
@@ -125,6 +126,27 @@ void generateCodes(int root, string codes[]) {
     // Use stack<pair<int, string>> to simulate DFS traversal.
     // Left edge adds '0', right edge adds '1'.
     // Record code when a leaf node is reached.
+    stack<pair<int, string>> s;
+    //Start with the root and empty string
+    s.push({root, ""});
+
+    //Run a while loop that runs through the array
+   while (!s.empty()) {
+       //Access the last node added
+       auto [node,code] = s.top();
+       s.pop();
+       //Check if it is a leaf node
+       if (leftArr[node] == -1 && rightArr[node] == -1) {
+           // Assign code to character
+           codes[charArr[node] - 'a'] = code;
+       }
+       else{
+           if (rightArr[node] != -1)
+            s.push({rightArr[node], code + "1"});
+           if (leftArr[node] != -1)
+           s.push({leftArr[node], code + "0"});
+       }
+   }
 }
 
 // Step 5: Print table and encoded message
